@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta  content="text/html; charset=UTF-8">
+  
+  <title>todo list</title>
+  <meta name="viewport"
+    content="width=device-width,initial-scale=1.0">
+  <style>
+  *{
+    padding:0px;
+    margin:0px;
+    font-family:arial;
+    box-sizing:border-box;
+    text-align:center;
+    color:white;
+  }
+  body{
+    background:linear-gradient(45deg,red,orange);
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+  }
+  main{
+    background:darkblue;
+    max-width:800px;
+    height:auto;
+    border-radius:16px;
+    padding:10px;
+    width:80%;
+    padding-bottom:40px;
+  }
+  #input{
+    display:block;
+    width:100%;
+    height:50%;
+    font-size:20px;
+    border:none;
+    border-radius:4px;
+    color:black;
+  }
+  #addBtn{
+    width:100%;
+    background:green;
+    height:100%;
+    border:none;
+    border-radius:4px;
+  }
+  #date{
+    width:10%;
+    border:none;
+    border-radius:4px;
+    color:darkblue;
+  }
+  label{
+    font-size:20px;
+    width:90%;
+    
+  }
+  .header{
+    margin-top:5px;
+    display:flex;
+    box-shadow : 4px 4px 40px yellow;
+    height:60px;
+    gap:3px;
+  }
+  #list{
+    margin-top:25px;
+    display:grid;
+    grid-template-columns:1fr 6fr 3fr  2fr;  
+    
+  }
+  #list div{
+    box-shadow: 1px 1px 5px yellow;
+  }
+  .btn{
+    background:red;
+    border:none;
+    height:30px;
+    width:100%;
+  }
+  </style>
+  
+</head>
+
+<body>
+  <main>
+    
+  <div>
+   <h1>Todo list</h1>
+    
+    <div class="header"> 
+      <div style="flex:4;
+        ">      
+  <input placeholder="Enter task" id="input">
+        
+        <div style="
+          display:flex;
+          height:50%;
+          "> 
+  <label for="date">set date </label>
+  <input  id="date" type="date">
+         </div>    
+ 
+        
+       </div> 
+      
+      <div style="flex:1;">
+        <button id="addBtn">Add+</button>  
+      </div>
+   
+      
+    </div>
+  </div>
+    
+    
+  <div id="list">
+  </div>
+    
+    </main>
+  
+  <script>
+  let todoList = [];
+  const addBtn = document.getElementById("addBtn");
+  const todoTask = document.getElementById("input");
+  const todoDate = document.getElementById("date");
+  const list = document.getElementById("list");
+  const listHeader = `
+  <div>NO</div>
+  <div>Task</div>
+  <div>Date</div>
+  <div>Remove</div>
+  `;
+  
+  function addTask(){
+    if(todoTask.value && todoDate.value){
+    const listObject = {
+    task : todoTask.value,
+    date : todoDate.value
+    };   
+    todoList.push(listObject);
+    }else{
+     alert("Enter todo task and date");
+    }
+  }
+  
+  function saveLocal(){
+    const listData = JSON.stringify(todoList);
+    localStorage.setItem("todos",listData);
+    
+  }
+  
+  function loadTodo(){
+    if(localStorage.getItem("todos")){
+      todoList = JSON.parse(localStorage.getItem("todos"));
+      displayList();
+    }
+  }
+  
+  function displayList(){
+    let listHTML = "";
+    todoList.forEach((value,index) => {
+      listHTML =  ` 
+      <div>${index+1}</div>
+      <div>${value.task}</div>
+      <div>${value.date}</div>
+    <div>  <button class = 'btn' onclick="removeItem(${index});  " >remove</button>
+     </div> 
+      `+listHTML;
+      
+    });
+    list.innerHTML = listHeader + listHTML;
+  }
+  
+  
+  addBtn.onclick = function (){
+    addTask();
+    displayList();
+    todoTask.value="";
+    todoDate.value="";
+    saveLocal();
+  }
+  
+  function removeItem(i){
+    todoList.splice(i,1);
+    displayList();
+    saveLocal();
+  }
+  
+  loadTodo();
+  
+  </script>
+  
+  
+</body>
+</html>
